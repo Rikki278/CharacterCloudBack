@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+
+  character-service:
+    image: character-service
+    ports:
+      - "8085:8085"
+    networks:
+      - currency-network
+    depends_on:
+      - eureka-service
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-service:8761/eureka
+  
+  auth-service:
+    image: auth-service
+    ports:
+      - "8081:8081"
+    networks:
+      - currency-network
+    depends_on:
+      - eureka-service
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-service:8761/eureka
+
+  api-gateway:
+    image: api-gateway
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - eureka-service
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://eureka-service:8761/eureka
+  
+  eureka-service:
+    image: discovery-service
+    ports:
+      - "8761:8761"
+    networks:
+      - currency-network
+
+  frontend:
+    image: front-docker
+    ports:
+      - "3000:3000"
+    networks:
+      - currency-network
+
+networks:
+  currency-network:
+
